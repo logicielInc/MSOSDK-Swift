@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		800A11AA1ED3645900C3919C /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 800A11A81ED3645900C3919C /* Nimble.framework */; };
+		800A11AB1ED3645900C3919C /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 800A11A91ED3645900C3919C /* Quick.framework */; };
+		800A11AE1ED3647200C3919C /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 800A11A81ED3645900C3919C /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		800A11AF1ED3647200C3919C /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 800A11A91ED3645900C3919C /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		80E1A0191ED32EA900005C1E /* MSOSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80E1A00F1ED32EA900005C1E /* MSOSDK.framework */; };
 		80E1A01E1ED32EA900005C1E /* MSOSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E1A01D1ED32EA900005C1E /* MSOSDKTests.swift */; };
 		80E1A0201ED32EAA00005C1E /* MSOSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E1A0121ED32EA900005C1E /* MSOSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -24,7 +28,28 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		800A11AD1ED3646800C3919C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				800A11AE1ED3647200C3919C /* Nimble.framework in CopyFiles */,
+				800A11AF1ED3647200C3919C /* Quick.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		800A11A41ED3639500C3919C /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Cartfile; path = MSOSDK/Cartfile; sourceTree = "<group>"; };
+		800A11A51ED3639500C3919C /* Cartfile.private */ = {isa = PBXFileReference; lastKnownFileType = text; name = Cartfile.private; path = MSOSDK/Cartfile.private; sourceTree = "<group>"; };
+		800A11A61ED3639500C3919C /* Cartfile.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; name = Cartfile.resolved; path = MSOSDK/Cartfile.resolved; sourceTree = "<group>"; };
+		800A11A81ED3645900C3919C /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
+		800A11A91ED3645900C3919C /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
+		800A11B01ED365B700C3919C /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; name = .swiftlint.yml; path = MSOSDK/.swiftlint.yml; sourceTree = "<group>"; };
+		800A11B51ED3666700C3919C /* lint.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = lint.sh; sourceTree = "<group>"; };
 		80E1A00F1ED32EA900005C1E /* MSOSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MSOSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		80E1A0121ED32EA900005C1E /* MSOSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSOSDK.h; sourceTree = "<group>"; };
 		80E1A0131ED32EA900005C1E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -47,6 +72,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				800A11AA1ED3645900C3919C /* Nimble.framework in Frameworks */,
+				800A11AB1ED3645900C3919C /* Quick.framework in Frameworks */,
 				80E1A0191ED32EA900005C1E /* MSOSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,12 +81,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		800A11A71ED3645900C3919C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				800A11A81ED3645900C3919C /* Nimble.framework */,
+				800A11A91ED3645900C3919C /* Quick.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		800A11B21ED3666700C3919C /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				800A11B51ED3666700C3919C /* lint.sh */,
+			);
+			path = scripts;
+			sourceTree = "<group>";
+		};
 		80E1A0051ED32EA900005C1E = {
 			isa = PBXGroup;
 			children = (
+				800A11B01ED365B700C3919C /* .swiftlint.yml */,
+				800A11A41ED3639500C3919C /* Cartfile */,
+				800A11A51ED3639500C3919C /* Cartfile.private */,
+				800A11A61ED3639500C3919C /* Cartfile.resolved */,
+				800A11B21ED3666700C3919C /* scripts */,
 				80E1A0111ED32EA900005C1E /* MSOSDK */,
 				80E1A01C1ED32EA900005C1E /* MSOSDKTests */,
 				80E1A0101ED32EA900005C1E /* Products */,
+				800A11A71ED3645900C3919C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -114,6 +164,7 @@
 				80E1A00B1ED32EA900005C1E /* Frameworks */,
 				80E1A00C1ED32EA900005C1E /* Headers */,
 				80E1A00D1ED32EA900005C1E /* Resources */,
+				800A11B11ED3661C00C3919C /* Lint */,
 			);
 			buildRules = (
 			);
@@ -131,6 +182,7 @@
 				80E1A0141ED32EA900005C1E /* Sources */,
 				80E1A0151ED32EA900005C1E /* Frameworks */,
 				80E1A0161ED32EA900005C1E /* Resources */,
+				800A11AD1ED3646800C3919C /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -199,6 +251,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		800A11B11ED3661C00C3919C /* Lint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Lint;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = $SRCROOT/scripts/lint.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		80E1A00A1ED32EA900005C1E /* Sources */ = {
@@ -376,6 +445,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 2JC6RB2989;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MSOSDKTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LCI.MSOSDKTests;
@@ -389,6 +462,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 2JC6RB2989;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MSOSDKTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LCI.MSOSDKTests;
@@ -416,6 +493,7 @@
 				80E1A0251ED32EAA00005C1E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		80E1A0261ED32EAA00005C1E /* Build configuration list for PBXNativeTarget "MSOSDKTests" */ = {
 			isa = XCConfigurationList;
@@ -424,6 +502,7 @@
 				80E1A0281ED32EAA00005C1E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
