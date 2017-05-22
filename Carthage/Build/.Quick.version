@@ -1,7 +1,7 @@
 {
   "iOS" : [
     {
-      "hash" : "fd8bbf51d79e89fd1f19466dd3f642a3253b3c35c3c34680e9253fa992026e55",
+      "hash" : "151c7508e813bb761d73be569c48c8fb4141e4cfc2c286647204876970442175",
       "name" : "Quick"
     }
   ],
@@ -11,13 +11,13 @@
   ],
   "tvOS" : [
     {
-      "hash" : "c7da4a723735a4fdce04bda87cb4e0fa534fcad7702b652e7083d63b645bd994",
+      "hash" : "439daa5bb23628e7924b58dae81f89b737675a4ee5eb2c80fabbc0fc2d5f2353",
       "name" : "Quick"
     }
   ],
   "Mac" : [
     {
-      "hash" : "162d4577c52cde7a6ac5e44e39adc6f5d046d118905a9b7f69be4232fe642174",
+      "hash" : "fb239437c21dc74fd9a8adf8f5181d8be24a9a41266f2cc2138339c0caf13cb8",
       "name" : "Quick"
     }
   ]
