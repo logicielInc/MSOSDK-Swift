@@ -76,9 +76,9 @@ struct Constants {
 
     struct Endpoint {
 
-      static let updateEndpoint = "logicielupdatews"
+      static let updateWS = "logicielupdatews"
       static let customerASMX = "logicielcustomer.asmx"
-      static let ftpWSEndpoint = "logiciel_ftp_ws"
+      static let ftpWS = "logiciel_ftp_ws"
       static let ftpServiceASMX = "FTPService.asmx"
 
     }
