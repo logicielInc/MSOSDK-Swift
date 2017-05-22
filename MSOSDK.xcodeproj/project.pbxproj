@@ -11,6 +11,11 @@
 		800A11AB1ED3645900C3919C /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 800A11A91ED3645900C3919C /* Quick.framework */; };
 		800A11AE1ED3647200C3919C /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 800A11A81ED3645900C3919C /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		800A11AF1ED3647200C3919C /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 800A11A91ED3645900C3919C /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		800A11B71ED36C9F00C3919C /* Master.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800A11B61ED36C9F00C3919C /* Master.swift */; };
+		800A11B91ED36EC900C3919C /* DateFormatter+MSOSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800A11B81ED36EC900C3919C /* DateFormatter+MSOSDK.swift */; };
+		800A11BF1ED378AD00C3919C /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 800A11BE1ED378AD00C3919C /* AFNetworking.framework */; };
+		800A11C11ED378BA00C3919C /* AFNetworking.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 800A11BE1ED378AD00C3919C /* AFNetworking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		800A11C71ED37FBA00C3919C /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800A11C61ED37FBA00C3919C /* Error.swift */; };
 		80E1A0191ED32EA900005C1E /* MSOSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80E1A00F1ED32EA900005C1E /* MSOSDK.framework */; };
 		80E1A01E1ED32EA900005C1E /* MSOSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E1A01D1ED32EA900005C1E /* MSOSDKTests.swift */; };
 		80E1A0201ED32EAA00005C1E /* MSOSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E1A0121ED32EA900005C1E /* MSOSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -40,16 +45,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		800A11C01ED378B300C3919C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				800A11C11ED378BA00C3919C /* AFNetworking.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		800A11A41ED3639500C3919C /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Cartfile; path = MSOSDK/Cartfile; sourceTree = "<group>"; };
-		800A11A51ED3639500C3919C /* Cartfile.private */ = {isa = PBXFileReference; lastKnownFileType = text; name = Cartfile.private; path = MSOSDK/Cartfile.private; sourceTree = "<group>"; };
-		800A11A61ED3639500C3919C /* Cartfile.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; name = Cartfile.resolved; path = MSOSDK/Cartfile.resolved; sourceTree = "<group>"; };
 		800A11A81ED3645900C3919C /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
 		800A11A91ED3645900C3919C /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
-		800A11B01ED365B700C3919C /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; name = .swiftlint.yml; path = MSOSDK/.swiftlint.yml; sourceTree = "<group>"; };
 		800A11B51ED3666700C3919C /* lint.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = lint.sh; sourceTree = "<group>"; };
+		800A11B61ED36C9F00C3919C /* Master.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Master.swift; sourceTree = "<group>"; };
+		800A11B81ED36EC900C3919C /* DateFormatter+MSOSDK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DateFormatter+MSOSDK.swift"; sourceTree = "<group>"; };
+		800A11BA1ED377D600C3919C /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
+		800A11BB1ED377D600C3919C /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		800A11BC1ED377D600C3919C /* Cartfile.private */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
+		800A11BD1ED377D600C3919C /* Cartfile.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = "<group>"; };
+		800A11BE1ED378AD00C3919C /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = Carthage/Build/iOS/AFNetworking.framework; sourceTree = "<group>"; };
+		800A11C61ED37FBA00C3919C /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		80E1A00F1ED32EA900005C1E /* MSOSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MSOSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		80E1A0121ED32EA900005C1E /* MSOSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSOSDK.h; sourceTree = "<group>"; };
 		80E1A0131ED32EA900005C1E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -65,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				800A11BF1ED378AD00C3919C /* AFNetworking.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +104,7 @@
 		800A11A71ED3645900C3919C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				800A11BE1ED378AD00C3919C /* AFNetworking.framework */,
 				800A11A81ED3645900C3919C /* Nimble.framework */,
 				800A11A91ED3645900C3919C /* Quick.framework */,
 			);
@@ -101,10 +122,10 @@
 		80E1A0051ED32EA900005C1E = {
 			isa = PBXGroup;
 			children = (
-				800A11B01ED365B700C3919C /* .swiftlint.yml */,
-				800A11A41ED3639500C3919C /* Cartfile */,
-				800A11A51ED3639500C3919C /* Cartfile.private */,
-				800A11A61ED3639500C3919C /* Cartfile.resolved */,
+				800A11BA1ED377D600C3919C /* .swiftlint.yml */,
+				800A11BB1ED377D600C3919C /* Cartfile */,
+				800A11BC1ED377D600C3919C /* Cartfile.private */,
+				800A11BD1ED377D600C3919C /* Cartfile.resolved */,
 				800A11B21ED3666700C3919C /* scripts */,
 				80E1A0111ED32EA900005C1E /* MSOSDK */,
 				80E1A01C1ED32EA900005C1E /* MSOSDKTests */,
@@ -128,6 +149,9 @@
 				80E1A0121ED32EA900005C1E /* MSOSDK.h */,
 				80E1A0291ED32F1400005C1E /* Constants.swift */,
 				80E1A02B1ED3369D00005C1E /* Response.swift */,
+				800A11B61ED36C9F00C3919C /* Master.swift */,
+				800A11C61ED37FBA00C3919C /* Error.swift */,
+				800A11B81ED36EC900C3919C /* DateFormatter+MSOSDK.swift */,
 				80E1A0131ED32EA900005C1E /* Info.plist */,
 			);
 			path = MSOSDK;
@@ -165,6 +189,7 @@
 				80E1A00C1ED32EA900005C1E /* Headers */,
 				80E1A00D1ED32EA900005C1E /* Resources */,
 				800A11B11ED3661C00C3919C /* Lint */,
+				800A11C01ED378B300C3919C /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -274,7 +299,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				800A11B71ED36C9F00C3919C /* Master.swift in Sources */,
 				80E1A02C1ED3369D00005C1E /* Response.swift in Sources */,
+				800A11B91ED36EC900C3919C /* DateFormatter+MSOSDK.swift in Sources */,
+				800A11C71ED37FBA00C3919C /* Error.swift in Sources */,
 				80E1A02A1ED32F1400005C1E /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -409,6 +437,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MSOSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -430,6 +462,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MSOSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
