@@ -51,6 +51,7 @@ struct Constants {
     static let baseIncUrl = "http://logicielinc.com"
     static let baseUrl = "http://logiciel.com/"
 
+    //swiftlint:disable nesting
     struct Function {
 
       static let doWork = "IServiceLibrary/DoWork"
@@ -75,12 +76,13 @@ struct Constants {
 
     struct Endpoint {
 
-      static let updateEndpoint = "logicielupdatews"
+      static let updateWS = "logicielupdatews"
       static let customerASMX = "logicielcustomer.asmx"
-      static let ftpWSEndpoint = "logiciel_ftp_ws"
+      static let ftpWS = "logiciel_ftp_ws"
       static let ftpServiceASMX = "FTPService.asmx"
 
     }
+    //swiftlint:enable nesting
 
   }
 
@@ -153,7 +155,6 @@ enum RequestType: UInt8 {
  @param progress An NSProgress object
  */
 typealias MSOProgressBlock = (_ progress: Progress) -> Void
-
 
 /**
  A success block used to signal a method has successfully finished with no errors
