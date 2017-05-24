@@ -107,6 +107,191 @@ final class Master {
     return soapBody
 
   }
+
+  private func validate(_ data: String?, command: String?, status: String?) throws -> Bool {
+
+    var validity = false
+
+    guard let data = data else {
+      return validity
+    }
+
+    do {
+      validity = try validateCredentials(data, command: command, status: status)
+      validity = try validateResults(data, command: command, status: status)
+      return validity
+    }
+    catch let e {
+      throw e
+    }
+
+  }
+
+  private func validateCredentials(_ data: String, command: String?, status: String?) throws -> Bool {
+
+    if data.hasPrefix("Invalid Login:") ||
+      data.hasPrefix("Invalid ID/Password or Access Level.") {
+      throw MSOSDKError.invalidCredentials()
+    }
+
+    if data.hasPrefix("Invalid Event:") {
+      throw MSOSDKError.invalidEvent()
+    }
+
+    if data.hasPrefix("Invalid Event.") {
+      throw MSOSDKError.eventUpdated(command ?? "", eventId: status ?? "")
+    }
+
+    return true
+  }
+
+  private func validateResults(_ data: String, command: String?, status: String?) throws -> Bool {
+
+    if data.hasPrefix("Unknown Format:") {
+
+      if command == "_O002" {
+        if data.hasSuffix("*****Error Message: Value was either too large or too small for a Decimal.") {
+          throw MSOSDKError.salesOrderTotal()
+        }
+      }
+
+      if data.contains("OutOfMemoryException") {
+        throw MSOSDKError.outOfMemory()
+      } else {
+        throw MSOSDKError.unknownFormat(data)
+      }
+    }
+
+    if data == "Item Not Found." {
+      throw MSOSDKError.productFetchEmptyResults()
+    }
+
+    if data == "Photo Not Found" {
+      throw MSOSDKError.imageNotFound()
+    }
+
+    if data == "Exceeded Limit" {
+      throw MSOSDKError.customerQueryExceededLimit()
+    }
+
+    if data == "No Customer Found." {
+      throw MSOSDKError.customerQueryNotFound()
+    }
+    
+    if data.hasSuffix("No Customer Updated.") {
+      throw MSOSDKError.customerQueryNotFound()
+    }
+
+    if command == "_E004", data == "No Sales Order Found." {
+      throw MSOSDKError.salesOrdersNotFound()
+    }
+
+    if command == "_O001", data == "No Sales Order Found." {
+      throw MSOSDKError.salesOrderNotFound()
+    }
+
+    if command == "_P011", data == "Item Not Found" {
+      throw MSOSDKError.imageUpload()
+    }
+
+    if command == "_C006", data.hasSuffix("No Auto-Mapping Created.") {
+      throw MSOSDKError.autoMappingNotCreated()
+    }
+
+    if command == "_C007", data.hasSuffix("Index was outside the bounds of the array.") {
+      throw MSOSDKError.autoMappingNotUpdated()
+    }
+
+    if let status = status {
+
+      guard let command = command else {
+        throw MSOSDKError.methodRequest("")
+      }
+
+      if status == "NO" {
+        throw MSOSDKError.methodRequest(command)
+      }
+
+    }
+
+
+    return true
+
+  }
+
+  private func urlRequestForImage(url: String, timeout: TimeInterval = 10, error: NSErrorPointer) -> URLRequest {
+    let serializer = AFHTTPRequestSerializer()
+    serializer.timeoutInterval = timeout
+
+    let request = serializer.request(withMethod: "GET", urlString: url, parameters: nil, error: error)
+
+    return request as URLRequest
+  }
+
+  func urlRequest(parameters: [SoapParameter],
+                  type: String,
+                  url: URL,
+                  netserver: Bool,
+                  timeout: TimeInterval = 10,
+                  error: NSErrorPointer) -> URLRequest {
+
+    var parameterArray = [String]()
+    var namespace: String
+
+    if netserver {
+
+      let format = " must be set. Use + (void)setMSONetserverIPAddress:(NSString *)msoNetserverIPAddress " +
+      "msoDeviceName:(NSString *)msoDeviceName " +
+      "msoDeviceIpAddress:(NSString *)msoDeviceIpAddress " +
+      "msoEventId:(NSString *)msoEventId"
+
+      guard let deviceName = deviceName else {
+        fatalError("deviceName".appending(format))
+      }
+
+      guard let deviceIp = deviceIp else {
+        fatalError("deviceIp".appending(format))
+      }
+
+      guard let eventId = eventId else {
+        fatalError("eventId".appending(format))
+      }
+
+      let client = "\(deviceName) [\(deviceIp)]{SQL05^\(eventId)}#iPad#"
+//      client = client.buildCommand()
+      let clientParameter = SoapParameter(withObject: client, forKey: "client")
+      parameterArray.append(clientParameter.xml())
+
+      namespace = Constants.URL.baseIncUrl
+    }
+    else {
+      namespace = Constants.URL.baseUrl
+    }
+
+    var actionUrl = URL(string: namespace)
+    actionUrl = actionUrl?.appendingPathComponent(type)
+
+    for parameter in parameters {
+      parameterArray.append(parameter.xml())
+    }
+
+    let parameterString = parameterArray.joined(separator: "\n")
+    let soapMessage = createEnvelope(withMethod: type /*need to write lastPathComponent()*/, namespace: namespace, parameters: parameterString)
+
+    let serializer = AFHTTPRequestSerializer()
+    serializer.timeoutInterval = timeout
+    serializer.setValue("text/xml; charset=utf-8", forHTTPHeaderField: "Content-Type")
+    serializer.setValue("\(soapMessage)", forHTTPHeaderField: "Content-Length")
+    serializer.setValue(actionUrl?.absoluteString, forHTTPHeaderField: "SOAPAction")
+
+    let request = serializer.request(withMethod: "POST",
+                                     urlString: url.absoluteString,
+                                     parameters: nil,
+                                     error: error)
+    request.httpBody = soapMessage.data(using: Constants.URL.encoding)
+    return request as URLRequest
+  }
+
 }
 
 struct SoapParameter {

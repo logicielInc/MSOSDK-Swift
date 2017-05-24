@@ -12,41 +12,271 @@ struct Webserver {
 
 }
 
-struct Netserver {
+protocol NetserverResponse {
+  var command: String? { get set }
+  var status: String? { get set }
+  var trailingResponse: [String]? { get set }
+  init()
+  init(_ response: String?) throws
+}
 
-  /**
-   @brief MSO will return back 3 results: Always Append, Always Retrieve, Offer Choice
-   */
-  enum BehaviorWhenEnteringItem: UInt8 {
-    case append
-    case retrieve
-    case choice
+extension String {
+
+  func stringBetween(_ begin: String?, end: String?) -> String? {
+
+    guard let begin = begin, let end = end else {
+      return nil
+    }
+
+    let scanner = Scanner(string: self)
+    var scanned: NSString?
+
+    if scanner.scanUpTo(begin, into:nil) {
+      scanner.scanString(end, into:nil)
+      if scanner.scanUpTo(end, into:&scanned) {
+        return scanned as String?
+      }
+    }
+
+    return nil
   }
 
-  /**
-   @brief MSO will return back 3 results: Item Setup, Back Order, Offer Choice
-   */
-  enum RedAlertIfOrderQuantityGreaterThanOnHand: UInt8 {
-    case itemSetup
-    case backorder
-    case choice
+}
+
+extension NetserverResponse {
+
+  init(_ response: String?) throws {
+
+    self.init()
+    
+    guard let response = response, response.isEmpty == false else {
+      throw MSOSDKError.ping()
+    }
+
+    if response.hasPrefix("Invalid Login:") ||
+      response.hasSuffix("Invalid ID/Password or Access Level.") {
+      throw MSOSDKError.invalidCredentials()
+    }
+
+    if response.hasPrefix("Invalid Event:") {
+      throw MSOSDKError.invalidEvent()
+    }
+
+    if response.hasPrefix("OutOfMemoryException") {
+      throw MSOSDKError.outOfMemory()
+    }
+
+    if response.hasPrefix("Invalid Event.") {
+
+      guard let eventId = response.stringBetween("[", end: "]") else {
+        throw MSOSDKError.invalidEvent()
+      }
+
+      let start = response.index(eventId.startIndex, offsetBy: 2)
+      let end = response.index(response.endIndex, offsetBy: 0)
+      let range = start..<end
+      let eventName = response.substring(with: range)
+      throw MSOSDKError.eventUpdated(eventName, eventId: eventId)
+
+    }
+
+    let components = response.components(separatedBy: "^")
+
+    guard let command = components[safe: 0],
+      command != "iPad connection terminated" else {
+        status = "OK"
+        return
+    }
+
+    status = components[safe: 1]
+
+    if components.count > 2 {
+
+      let length = components.count - 2
+      trailingResponse = Array(components.suffix(length))
+
+    }
+
   }
 
-  struct Settings {
+  var trailingResponse: [String]? {
+    return nil
+  }
 
-    public private(set) var companyPriceLevel: UInt8 = 1
+  var status: String? {
+    return nil
+  }
 
-    /// if yes, multiple companies, else, single company
-    public private(set) var multiCompany: Bool = false
-    public private(set) var allowCustomAssortment: Bool = false
+  var command: String? {
+    return nil
+  }
 
-    public private(set) var eventName: String?
-    public private(set) var eventId: String?
-    public private(set) var backupOrder: String
-    public private(set) var keepSubmittedOrderCopy: String
-    public private(set) var terms: String
-    public private(set) var shipTo: String
+}
 
+extension Collection where Indices.Iterator.Element == Index {
+
+  /// Returns the element at the specified index iff it is within bounds, otherwise nil.
+  subscript (safe index: Index) -> Generator.Element? {
+    return indices.contains(index) ? self[index] : nil
+  }
+}
+
+struct Ping: NetserverResponse {
+  var trailingResponse: [String]?
+
+  var status: String?
+
+  var command: String?
+
+  public private(set) var extendedCommand: String?
+  public private(set) var eventId: String?
+  public private(set) var eventName: String?
+}
+
+/**
+ @brief MSO will return back 3 results: Always Append, Always Retrieve, Offer Choice
+ */
+enum BehaviorWhenEnteringItem: UInt8 {
+  case append
+  case retrieve
+  case choice
+}
+
+/**
+ @brief MSO will return back 3 results: Item Setup, Back Order, Offer Choice
+ */
+enum RedAlertIfOrderQuantityGreaterThanOnHand: UInt8 {
+  case itemSetup
+  case backorder
+  case choice
+}
+
+struct ProductCount {
+  public private(set) var objectCount: UInt8
+}
+
+struct SaveCustomer {
+  public private(set) var objectCount: UInt8
+  public private(set) var mainstore: String?
+  public private(set) var accountNumber: String?
+  public private(set) var terms: String?
+  public private(set) var priceLevel: UInt8
+}
+
+struct UpdateCustomer {
+  public private(set) var objectCount: UInt8
+  public private(set) var message: String?
+}
+
+struct SaveCustomerAddress {
+  public private(set) var customerName: String?
+  public private(set) var contactName: String?
+  public private(set) var address1: String?
+  public private(set) var address2: String?
+  public private(set) var city: String?
+  public private(set) var state: String?
+  public private(set) var zip: String?
+  public private(set) var country: String?
+  public private(set) var phone: String?
+  public private(set) var fax: String?
+  public private(set) var email: String?
+}
+
+protocol Sync: NetserverResponse {
+  var objectCount: UInt8 { get set }
+  var nextIndex: String? { get set }
+  var data: String? { get set }
+}
+
+struct SyncSettings {
+
+}
+
+struct SyncCustomers {
+
+}
+
+struct SaveCustomerMapping {
+
+}
+
+struct UpdateCustomerMapping {
+
+}
+
+struct SyncPurchaseHistory {
+
+}
+
+struct Login {
+  public private(set) var response: String?
+  public private(set) var userId: String?
+  public private(set) var manager: Bool = false
+  public private(set) var priceLevels: Bool = false
+  public private(set) var allowPriceLevel1: Bool = false
+  public private(set) var allowPriceLevel2: Bool = false
+  public private(set) var allowPriceLevel3: Bool = false
+  public private(set) var allowPriceLevel4: Bool = false
+  public private(set) var allowPriceLevel5: Bool = false
+  public private(set) var allowUserDefinedPriceLevel: Bool = false
+}
+
+struct QuerySalesOrder {
+  public private(set) var objectCount: UInt8
+  public private(set) var data: String?
+  public private(set) var itemSet: String?
+}
+
+struct QueryImages {
+  public private(set) var objectCount: UInt8
+  public private(set) var images: [String]?
+}
+
+struct SaveImage {
+  public private(set) var identifier: String?
+  public private(set) var message: String?
+}
+
+struct SubmitSalesOrder {
+  public private(set) var objectCount: UInt8
+  public private(set) var orderNumber: String?
+  public private(set) var customerName: String?
+  public private(set) var customerAccountNumber: String?
+}
+
+struct Settings {
+
+  public private(set) var companyPriceLevel: UInt8 = 1
+
+  /// if yes, multiple companies, else, single company
+  public private(set) var multiCompany: Bool = false
+  public private(set) var allowCustomAssortment: Bool = false
+
+  public private(set) var eventName: String?
+  public private(set) var eventId: String?
+  public private(set) var backupOrder: String
+  public private(set) var keepSubmittedOrderCopy: String
+  public private(set) var terms: String
+  public private(set) var shipTo: String
+
+  public private(set) var bulkSellingDescription: String
+
+  /// MARK: Customer
+  public private(set) var lastPurchasePricePriority: String
+
+  /// MARK: S.O. Message
+  public private(set) var companyPolicy: String
+  public private(set) var customerGreeting: String
+  public private(set) var payment: String
+
+  public private(set) var customerAddress: CustomerAddress
+  public private(set) var customizedSO: CustomizedSO
+  public private(set) var configuration1: Configuration1
+  public private(set) var configuration2: Configuration2
+  public private(set) var pdaConfiguration1: PDAConfiguration1
+  public private(set) var pdaConfiguration2: PDAConfiguration2
+
+  struct CustomerAddress {
     public private(set) var companyName: String
     public private(set) var email: String?
     public private(set) var website: String?
@@ -60,18 +290,10 @@ struct Netserver {
     public private(set) var country: String?
     public private(set) var zip: String?
     public private(set) var fax: String?
+  }
 
-    public private(set) var bulkSellingDescription: String
+  struct CustomizedSO {
 
-    /// MARK: Customer
-    public private(set) var lastPurchasePricePriority: String
-
-    /// MARK: S.O. Message
-    public private(set) var companyPolicy: String
-    public private(set) var customerGreeting: String
-    public private(set) var payment: String
-
-    /// MARK: Customized S.O.
     /// NOTE : 17 Elements (first and last can be empty strings)
     /// NOTE : Unsent fields
     /// - Print Photo on Customer Copy
@@ -85,27 +307,30 @@ struct Netserver {
     /// - Print Order Log
     /// - Suppress Price when Price = 0
     /// - Show Item# & Description only when Price = 0
-    public private(set) var printUCP: Bool
-    public private(set) var printDescription2: Bool
-    public private(set) var printItemVendorName: Bool
-    public private(set) var printManufacturerName: Bool
-    public private(set) var printOrderTotal: Bool
-    public private(set) var printSortByItemNumber: Bool
-    public private(set) var printMSRP: Bool
-    public private(set) var printPrice: Bool
-    public private(set) var printItemColorSizeAbbreviation: Bool
-    public private(set) var printItemWeight: Bool
-    public private(set) var printTotalWeight: Bool
-    public private(set) var printItemVolume: Bool
-    public private(set) var printTotalVolume: Bool
-    public private(set) var printItemDiscountIfDiscounted: Bool
-    public private(set) var printIfBulkSellingShowQuantity: Bool
-    public private(set) var printIfBulkSellingShowPrice: Bool
+    public private(set) var ucp: Bool
+    public private(set) var description2: Bool
+    public private(set) var itemVendorName: Bool
+    public private(set) var manufacturerName: Bool
+    public private(set) var orderTotal: Bool
+    public private(set) var sortByItemNumber: Bool
+    public private(set) var msrp: Bool
+    public private(set) var price: Bool
+    public private(set) var itemColorSizeAbbreviation: Bool
+    public private(set) var itemWeight: Bool
+    public private(set) var totalWeight: Bool
+    public private(set) var itemVolume: Bool
+    public private(set) var totalVolume: Bool
+    public private(set) var itemDiscountIfDiscounted: Bool
+    public private(set) var ifBulkSellingShowQuantity: Bool
+    public private(set) var ifBulkSellingShowPrice: Bool
 
     /// This is shown in Event -> Setup -> Information -> Under Source Code (Use Customer's Sales Rep. on Sales Order)
-    public private(set) var printCustomerRep: Bool
+    public private(set) var customerRep: Bool
 
-    /// MARK: Configuration 1 
+  }
+
+  struct Configuration1 {
+
     public private(set) var salesTax: Float
     public private(set) var salesTaxForSampleSales: Float
     public private(set) var minimumOrderAmount: Float
@@ -117,7 +342,9 @@ struct Netserver {
     public private(set) var discountRuleSubtotal: UInt8
     public private(set) var discountRuleShippingChoice: UInt8
     public private(set) var discountRuleAllowShipping: UInt8
+  }
 
+  struct Configuration2 {
     /// MARK: Configuration 2
     public private(set) var formatterPriceItemLevel: NumberFormatter
     public private(set) var formatterPriceTotal: NumberFormatter
@@ -140,8 +367,10 @@ struct Netserver {
     public private(set) var applyCustomerDiscountAsOrderDiscount: Bool
     public private(set) var defaultQuantityToPreviousEntry: Bool
     public private(set) var defaultShipDateToPreviousEntry: Bool
+  }
 
-    /// MARK: PDA Configuration 1
+  struct PDAConfiguration1 {
+
     /**
      NOTE : Unsent fields
      - Scan Swipe Badge Mapping
@@ -155,8 +384,10 @@ struct Netserver {
     public private(set) var scannerSetupReadChecksumDigit: UInt8
 
     public private(set) var scanSwipeBadgeMapping: UInt8
+  }
 
-    /// MARK: PDA Configuration 2
+  struct PDAConfiguration2 {
+
     /**
      NOTE : Unsent fields
      - Initiate Sales Order Printing from Host PC Only
@@ -184,113 +415,112 @@ struct Netserver {
     public private(set) var userDefinedProductLine: String
     public private(set) var userDefinedCategory: String
     public private(set) var userDefinedSeason: String
+  }
 
-    public func productPricing() -> Bool {
-      return pricingStructure == "B"
+  public func productPricing() -> Bool {
+    return configuration1.pricingStructure == "B"
+  }
+
+  public func formattedEventName() -> String {
+    guard let id = eventId, let name = eventName else {
+      return "Event: Not Synced"
     }
 
-    public func formattedEventName() -> String {
-      guard let id = eventId, let name = eventName else {
-        return "Event: Not Synced"
-      }
-
-      let formattedName = name.replacingOccurrences(of: "[\(id)]", with: "")
-      if formattedName.characters.isEmpty || id.characters.isEmpty {
-        return "Event: Not Synced"
-      }
-      return "Event: \(id) - \(formattedName)"
-
+    let formattedName = name.replacingOccurrences(of: "[\(id)]", with: "")
+    if formattedName.characters.isEmpty || id.characters.isEmpty {
+      return "Event: Not Synced"
     }
-
-    //swiftlint:disable function_body_length
-    //swiftlint:disable cyclomatic_complexity
-    public func formattedCompanyAddress() -> String? {
-
-      var components = [String]()
-
-      var addressComponents = [String]()
-      var subAddressComponents = [String]()
-      if let address1 = address1 {
-        subAddressComponents.append(address1)
-      }
-
-      if subAddressComponents.isEmpty {
-        addressComponents.append(subAddressComponents.joined(separator: " "))
-      }
-
-      subAddressComponents.removeAll()
-      if let address2 = address2, address2.characters.isEmpty {
-        subAddressComponents.append(address2)
-      }
-
-      if let city = city, city.characters.isEmpty {
-        subAddressComponents.append(city)
-      }
-
-      if addressComponents.isEmpty {
-        addressComponents.append(subAddressComponents.joined(separator: " "))
-      }
-
-      subAddressComponents.removeAll()
-      if let state = state, state.characters.isEmpty {
-        subAddressComponents.append(state)
-      }
-
-      if let zip = zip, zip.characters.isEmpty {
-        subAddressComponents.append(zip)
-      }
-
-      if let country = country, country.characters.isEmpty {
-        subAddressComponents.append(country)
-      }
-
-      if subAddressComponents.isEmpty {
-        addressComponents.append(subAddressComponents.joined(separator: " "))
-      }
-
-      if addressComponents.isEmpty {
-        components.append(addressComponents.joined(separator: ", "))
-      }
-
-      subAddressComponents.removeAll()
-      if let phone1 = phone1, phone1.characters.isEmpty {
-        subAddressComponents.append(phone1)
-      }
-
-      if let phone2 = phone2, phone2.characters.isEmpty {
-        subAddressComponents.append(phone2)
-      }
-
-      if let fax = fax, fax.characters.isEmpty {
-        subAddressComponents.append(fax)
-      }
-
-      if subAddressComponents.isEmpty {
-        if subAddressComponents.count > 1 {
-          components.append("Tel \(subAddressComponents.joined(separator: " "))")
-        }
-        else {
-          components.append(subAddressComponents.joined(separator: " "))
-        }
-      }
-
-      subAddressComponents.removeAll()
-      if let email = email, email.characters.isEmpty {
-        subAddressComponents.append(email)
-      }
-
-      if let website = website, website.characters.isEmpty {
-        subAddressComponents.append(website)
-      }
-
-      if subAddressComponents.isEmpty {
-        components.append(subAddressComponents.joined(separator: " "))
-      }
-
-      return components.isEmpty ? components.joined(separator: "\n") : nil
-    }
-    //swiftlint:enable function_body_length
-    //swiftlint:enable cyclomatic_complexity
+    return "Event: \(id) - \(formattedName)"
 
   }
+
+  //swiftlint:disable function_body_length
+  //swiftlint:disable cyclomatic_complexity
+  public func formattedCompanyAddress() -> String? {
+
+    var components = [String]()
+
+    var addressComponents = [String]()
+    var subAddressComponents = [String]()
+    if let address1 = customerAddress.address1 {
+      subAddressComponents.append(address1)
+    }
+
+    if subAddressComponents.isEmpty {
+      addressComponents.append(subAddressComponents.joined(separator: " "))
+    }
+
+    subAddressComponents.removeAll()
+    if let address2 = customerAddress.address2, address2.characters.isEmpty {
+      subAddressComponents.append(address2)
+    }
+
+    if let city = customerAddress.city, city.characters.isEmpty {
+      subAddressComponents.append(city)
+    }
+
+    if addressComponents.isEmpty {
+      addressComponents.append(subAddressComponents.joined(separator: " "))
+    }
+
+    subAddressComponents.removeAll()
+    if let state = customerAddress.state, state.characters.isEmpty {
+      subAddressComponents.append(state)
+    }
+
+    if let zip = customerAddress.zip, zip.characters.isEmpty {
+      subAddressComponents.append(zip)
+    }
+
+    if let country = customerAddress.country, country.characters.isEmpty {
+      subAddressComponents.append(country)
+    }
+
+    if subAddressComponents.isEmpty {
+      addressComponents.append(subAddressComponents.joined(separator: " "))
+    }
+
+    if addressComponents.isEmpty {
+      components.append(addressComponents.joined(separator: ", "))
+    }
+
+    subAddressComponents.removeAll()
+    if let phone1 = customerAddress.phone1, phone1.characters.isEmpty {
+      subAddressComponents.append(phone1)
+    }
+
+    if let phone2 = customerAddress.phone2, phone2.characters.isEmpty {
+      subAddressComponents.append(phone2)
+    }
+
+    if let fax = customerAddress.fax, fax.characters.isEmpty {
+      subAddressComponents.append(fax)
+    }
+
+    if subAddressComponents.isEmpty {
+      if subAddressComponents.count > 1 {
+        components.append("Tel \(subAddressComponents.joined(separator: " "))")
+      }
+      else {
+        components.append(subAddressComponents.joined(separator: " "))
+      }
+    }
+
+    subAddressComponents.removeAll()
+    if let email = customerAddress.email, email.characters.isEmpty {
+      subAddressComponents.append(email)
+    }
+
+    if let website = customerAddress.website, website.characters.isEmpty {
+      subAddressComponents.append(website)
+    }
+
+    if subAddressComponents.isEmpty {
+      components.append(subAddressComponents.joined(separator: " "))
+    }
+
+    return components.isEmpty ? components.joined(separator: "\n") : nil
+  }
+  //swiftlint:enable function_body_length
+  //swiftlint:enable cyclomatic_complexity
 }

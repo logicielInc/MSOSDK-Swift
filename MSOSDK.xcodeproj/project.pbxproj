@@ -188,7 +188,6 @@
 				80E1A00B1ED32EA900005C1E /* Frameworks */,
 				80E1A00C1ED32EA900005C1E /* Headers */,
 				80E1A00D1ED32EA900005C1E /* Resources */,
-				800A11B11ED3661C00C3919C /* Lint */,
 				800A11C01ED378B300C3919C /* CopyFiles */,
 			);
 			buildRules = (
@@ -276,23 +275,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		800A11B11ED3661C00C3919C /* Lint */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = Lint;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = $SRCROOT/scripts/lint.sh;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		80E1A00A1ED32EA900005C1E /* Sources */ = {
